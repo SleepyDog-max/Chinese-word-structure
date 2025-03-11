@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>趣味汉语构词测验</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            color: #333;
+            padding: 20px;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+        .question {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        button {
+            margin: 5px;
+            padding: 12px 18px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .btn-primary {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #218838;
+        }
+        .btn-secondary {
+           background-color: #007bff;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #0056b3;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h2>趣味汉语构词测验</h2>
+        <div id="quiz"></div>
+        <button id="next" class="btn-primary">下一题</button>
+        <button id="restart" class="btn-danger hidden">重新开始</button>
+        <div id="result" class="hidden"></div>
+    </div>
+
+    <script>
+        const questions = [
+            { question: "‘阿’在‘阿姨’、‘阿弟’中是词根还是词缀？", options: ["词根", "词缀"], answer: 1, explanation: "‘阿’是附加成分，不能独立使用，通常作为亲属或昵称的前缀。" },
+            { question: "汉语是否有类似于英语‘-ed’、‘-ing’的语法性词缀？", options: ["有", "没有"], answer: 1, explanation: "汉语主要使用词序和虚词来表达语法功能，而不是词缀。" },
+            { question: "‘反’在‘反恐怖主义’、‘反腐败’中属于？", options: ["自由词素", "粘着词素"], answer: 1, explanation: "‘反’一般不能单独成词，需与其他成分搭配，如‘反对’、‘反思’。" },
+            { question: "‘买卖’属于哪种构词方式？", options: ["主谓结构", "对偶结构"], answer: 1, explanation: "‘买卖’由两个意义相反的动词组成，属于对偶结构。" },
+            { question: "‘汽车’的构词方式是？", options: ["修饰-中心结构", "动宾结构"], answer: 0, explanation: "‘汽’修饰‘车’，表示一种特定类型的车。" },
+            { question: "‘性’在‘可行性’、‘建设性’中是？", options: ["词缀", "词根"], answer: 0, explanation: "‘性’是后缀，用于形成抽象名词。" },
+            { question: "‘员’在‘研究员’、‘运动员’中的作用是？", options: ["修饰词", "名词后缀"], answer: 1, explanation: "‘员’是名词后缀，表示职业或身份。" },
+            { question: "‘蜘蛛’属于哪种构词方式？", options: ["联合型合成词", "派生词"], answer: 0, explanation: "‘蜘蛛’由两个无意义的音节组成，属于联合型合成词。" },
+            { question: "‘反垄断’的构词方式是？", options: ["动宾结构", "偏正结构"], answer: 1, explanation: "‘反’修饰‘垄断’，属于偏正结构。" },
+            { question: "‘脸蛋’的构词方式是？", options: ["同义并列", "比喻构词"], answer: 1, explanation: "‘脸蛋’比喻脸部如蛋形，属于比喻构词。" }
+        ];
+        
+        let currentQuestion = 0;
+        let score = 0;
+        
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById("quiz").innerHTML = `<div class='question'>${q.question}</div>` +
+                q.options.map((opt, index) => `<button class='option' onclick='checkAnswer(${index})'>${opt}</button>`).join("<br>");
+            document.getElementById("next").style.display = "none";
+            document.getElementById("result").innerHTML = "";
+        }
+        
+        function checkAnswer(selected) {
+            if (selected === questions[currentQuestion].answer) {
+                score++;
+            }
+            document.getElementById("result").innerHTML = `<p>${questions[currentQuestion].explanation}</p>`;
+            document.getElementById("result").classList.remove("hidden");
+            document.getElementById("next").style.display = "inline-block";
+        }
+        
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+        
+        function showResult() {
+            document.getElementById("quiz").innerHTML = "";
+            document.getElementById("next").style.display = "none";
+            document.getElementById("restart").style.display = "inline-block";
+            document.getElementById("result").innerHTML = `<h3>测验完成！</h3>
+                <p>你的得分：${score} / ${questions.length}</p>
+                <ul>${questions.map((q, i) => `<li>${q.question} 答案: ${q.options[q.answer]} - ${q.explanation}</li>`).join("")}</ul>`;
+            document.getElementById("result").classList.remove("hidden");
+        }
+        
+        document.getElementById("next").addEventListener("click", nextQuestion);
+        document.getElementById("restart").addEventListener("click", () => location.reload());
+        
+        loadQuestion();
+    </script>
+</body>
+</html>
